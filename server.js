@@ -12,7 +12,7 @@ fs.readFile("database/user.json", "utf8", (err,data) => {
   }else {
     user = JSON.parse(data);
   }
-})
+});
 
 
 // 1 - chi bosqich kirish code

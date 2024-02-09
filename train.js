@@ -34,43 +34,63 @@ const list = [
 // console.log("passed here 1");
 
 // Async function
-async function maslahatBering(a) {
-  if (typeof a !== "number")throw new Error ("insert a number");
-  else if (a <= 20) return list[0];
-  else if (a > 20 && a<= 30) return list[1];
-  else if (a > 30 && a<= 40) return list[2];
-  else if (a > 40 && a<= 50) return list[3];
-  else if (a > 50 && a<= 60) return list[4];
-  else {
-    return new Promise((resolve, reject) => {
-      setTimeout (() => {
-        resolve(list[5]);
-      }, 5000);
-    });
-  }
+// async function maslahatBering(a) {
+//   if (typeof a !== "number")throw new Error ("insert a number");
+//   else if (a <= 20) return list[0];
+//   else if (a > 20 && a<= 30) return list[1];
+//   else if (a > 30 && a<= 40) return list[2];
+//   else if (a > 40 && a<= 50) return list[3];
+//   else if (a > 50 && a<= 60) return list[4];
+//   else {
+//     return new Promise((resolve, reject) => {
+//       setTimeout (() => {
+//         resolve(list[5]);
+//       }, 5000);
+//     });
+//   }
 
+// }
+
+
+// //caall via  then/catch
+// console.log("Passed here 0");
+// maslahatBering(65)
+// .then((data) => {
+//   console.log("javob", data);
+// })
+// .catch((err) => {
+//   console.log("ERROR", err);
+// });
+// console.log("passed here 1");
+
+// //call asyn/await
+// async function run() {
+//   let javob = await maslahatBering(25);
+//   console.log(javob);
+//   jacob = await maslahatBering(70);
+//   console.log(javob);
+//   javob = await maslahatBering(41);
+//   console.log(javob);
+// }
+
+// run();
+
+
+
+
+
+
+
+
+
+
+//Masala
+function countLetter(target, str) {
+  let count = 0;
+  str.split("").forEach((v) => {
+    if (v === target) count++;
+  });
+  return `forEach:
+   ${count}`;
 }
-
-
-//caall via  then/catch
-console.log("Passed here 0");
-maslahatBering(65)
-.then((data) => {
-  console.log("javob", data);
-})
-.catch((err) => {
-  console.log("ERROR", err);
-});
-console.log("passed here 1");
-
-//call asyn/await
-async function run() {
-  let javob = await maslahatBering(25);
-  console.log(javob);
-  jacob = await maslahatBering(70);
-  console.log(javob);
-  javob = await maslahatBering(41);
-  console.log(javob);
-}
-
-run();
+console.log(countLetter("e", "engineer"));

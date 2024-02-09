@@ -14,6 +14,7 @@ fs.readFile("database/user.json", "utf8", (err,data) => {
   }
 });
 
+console.log("Salom")
 
 // 1 - chi bosqich kirish code
 app.use(express.static("public"));

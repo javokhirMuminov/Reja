@@ -1,56 +1,29 @@
-console.log("Web Serverni boshlash");
-const express = require("express");
-const app = express();
+
 const http = require("http");
-const fs = require("fs");
-// const res = require("express/lib/response");
+const mongodb = require("mongodb");
 
-let user;
-fs.readFile("database/user.json", "utf8", (err,data) => {
-  if(err) {
-    console.log("Error", err);
-  }else {
-    user = JSON.parse(data);
+let db;
+const connectionString =
+  "mongodb+srv://javokhir:775577@cluster0.3gmdffb.mongodb.net/Reja?retryWrites=true&w=majority";
+mongodb.connect(
+  connectionString,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  (err, client) => {
+    if (err) console.log("db connect ERROR:", err);
+    else {
+      console.log("run MongoDB");
+      module.exports = client;
+      const app = require("./app");
+      const server = http.createServer(app);
+      let PORT = 3001;
+      server.listen(PORT, function () {
+        console.log(
+          `This server is running seccessfully on port: ${PORT}, http://localhost:${PORT}`
+        );
+      });
+    }
   }
-});
-
-console.log("Salom")
-
-// 1 - chi bosqich kirish code
-app.use(express.static("public"));
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
-
-//2- chio bosqich Session code
-
-
-
-//3 - chi bosqich Views code
-app.set("views", "views");
-app.set("view engine", "ejs");
-
-
-//4 Routing code
-// app.post("/create-item", (req, res) => {
-//   console.log(req.body);
-//   res.json({test:"success"});
-// })
-
-app.post("/create-item", (req, res) => {
-  //TODO: code with db here
-});
-
-app.get("/author", (req, res) => {
-  res.render("author", {user:user} );
-});
-
-app.get("/", function (req, res) {
-  res.render("harid");
-})
-
-const server = http.createServer(app);
-let PORT = 3000;
-server.listen(PORT, function () {
-  console.log(`The server is running successfully on port: ${PORT}`);
-})
+);

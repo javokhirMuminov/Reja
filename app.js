@@ -4,6 +4,7 @@ const app = express();
 const fs = require("fs");
 // const res = require("express/lib/response");
 const db = require("./server").db();
+const mongodb = require("mongodb");
 
 let user;
 fs.readFile("database/user.json", "utf8", (err,data) => {
@@ -42,15 +43,16 @@ app.post("/create-item", (req, res) => {
   console.log(req.body);
   const new_reja = req.body.reja;
   db.collection("plans").insertOne({ reja: new_reja }, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.end("err");
-    } else {
-      res.end("success");
-    }
+    console.log(data.ops);
+    res.json(data.ops[0]);
   });
 });
-
+app.post("/delete-item", (req, res) => {
+  const id = req.body.id;
+  db.collection("plans").deleteOne({ _id: new mongodb.ObjectId(id)}, function (err, data) {
+    res.json({state: "success"});
+  })
+});
 // app.get("/author", (req, res) => {
 //   res.render("author", {user:user} );
 // });

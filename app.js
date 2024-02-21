@@ -1,96 +1,71 @@
-console.log("Web Serverni boshlash");
 const express = require("express");
 const app = express();
-const fs = require("fs");
-// const res = require("express/lib/response");
+
 const db = require("./server").db();
 const mongodb = require("mongodb");
 
-let user;
-fs.readFile("database/user.json", "utf8", (err,data) => {
-  if(err) {
-    console.log("Error", err);
-  }else {
-    user = JSON.parse(data);
-  }
-});
+// 1. express ga kirib kelayotgan malumotlarga bogliq bulgan kodlar.
+app.use(express.static("public")); // harqanday  browserdan kirib kelgan request uchun public fulderi ochiq degan manoni anglatadi.
+app.use(express.json()); // kirib kelayotgan json formatdagi datani object formtga uzgartirib beradi.
+app.use(express.urlencoded({ extended: true })); // html da form request ni qabul qilishda ishlatiladi.
 
-console.log("Salom")
+// 2. Session code
 
-// 1 - chi bosqich kirish code
-app.use(express.static("public"));
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
-
-//2- chio bosqich Session code
-
-
-
-//3 - chi bosqich Views code
+// 3. BSSR (backend server side rendering) - backend da view yasash backend da html yasab browser ga yuboriladi.
 app.set("views", "views");
-app.set("view engine", "ejs");
+app.set("view engine", "ejs"); // ejs engine template
 
-
-//4 Routing code
-// app.post("/create-item", (req, res) => {
-//   console.log(req.body);
-//   res.json({test:"success"});
-// })
-
-app.post("/create-item", (req, res) => {
-  //TODO: code with db here
-  console.log(req.body);
+// 4. router lar
+app.post("/create-item", function (req, res) {
   const new_reja = req.body.reja;
   db.collection("plans").insertOne({ reja: new_reja }, (err, data) => {
-    console.log(data.ops);
+    console.log(data.ops[0]);
     res.json(data.ops[0]);
   });
 });
+
 app.post("/delete-item", (req, res) => {
   const id = req.body.id;
-  db.collection("plans").deleteOne({ _id: new mongodb.ObjectId(id)}, function (err, data) {
-    res.json({state: "success"});
-  })
-});
-// app.get("/author", (req, res) => {
-//   res.render("author", {user:user} );
-// });
-
-
-app.post("/adit-item", (req, res) => {
-  const data = req.body;
-  console.log(data);
-  db.collection("plans").findOneAndUpdate(
-    {_id: new mongodb.ObjectId(data.id)},
-    {$set: {reja: data.new_input }},
-    function (err, data) {
-      res.json({state: "success"});
+  db.collection("plans").deleteOne(
+    { _id: new mongodb.ObjectId(id) },
+    (err, data) => {
+      res.json({
+        status: "succsess",
+      });
     }
   );
-
 });
 
-app.post("/delete-all", (req,res) => {
+app.get("/", (req, res) => {
+  db.collection("plans")
+    .find()
+    .toArray((err, data) => {
+      if (err) {
+        console.log(err);
+        res.end("err");
+      } else {
+        res.render("reja", { items: data });
+      }
+    });
+});
+
+app.post("/edit-item", (req, res) => {
+  const data = req.body;
+  db.collection("plans").findOneAndUpdate(
+    { _id: new mongodb.ObjectId(data.id) },
+    { $set: { reja: data.new_input } },
+    (err, data) => {
+      res.json({ state: "success" });
+    }
+  );
+});
+
+app.post("/delete-all", (req, res) => {
   if (req.body.delete_all) {
     db.collection("plans").deleteMany(function () {
-      res.json({state:"hamma rejalar ochirildi"});
-    })
+      res.json({ state: "hamma rejalar uchirildi" });
+    });
   }
-})
+});
 
-
-app.get("/", function (req, res) {
-  db.collection("plans")
-  .find()
-  .toArray((err, data) => {
-    if (err) {
-      console.log(err);
-      res.end("err");
-    } else {
-      res.render("reja", { items: data });
-    }
-  });
-
-})
 module.exports = app;

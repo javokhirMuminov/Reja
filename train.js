@@ -40,3 +40,13 @@ console.log(maximumIndex)
 // 5. Agar 0inchidan keyingi element katta bo'lsa yangi variableni ichidagi qiymatni keyingi element bilan almashtiramiz
 // 6. Eng katta qiymatli elementni indeksini qaytaramiz
 console.log(sonlar("1a1a5a1a1"));
+
+
+//2 chi usul
+
+
+// function getHighestIndex(arr) {
+//   let max = Math.max(...arr);
+//   return arr.indexOf(max);
+// }
+// console.log(getHighestIndex([5, 21, 12, 21, 8]));
